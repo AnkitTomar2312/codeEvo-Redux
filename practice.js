@@ -2,6 +2,11 @@ const redux = require("redux");
 const createStore = redux.createStore;
 const bindActionCreators = redux.bindActionCreators;
 const combineReducers = redux.combineReducers;
+//importing middle ware
+const applyMiddleware = redux.applyMiddleware;
+//creating a logger used command [npm i redux-logger]
+const reduxLogger = require("redux-logger");
+const logger = reduxLogger.createLogger();
 
 const CAKE_ORDER = "CAKE_ORDER";
 const CAKE_RESTOCKED = "CAKE_RESTOCKED";
@@ -78,13 +83,12 @@ const rootReducers = combineReducers({
   icecream: IceCreamreducer,
 });
 
-const store = createStore(rootReducers);
+const store = createStore(rootReducers, applyMiddleware(logger));
 
 console.log("Initial State: ", store.getState());
 
-const unsubscribe = store.subscribe(() =>
-  console.log("New State: ", store.getState())
-);
+//just removed the log statement because now logger is there in store to log evert thing
+const unsubscribe = store.subscribe(() => {});
 
 const action = bindActionCreators(
   { orderCake, cakeRestocked, icecreamOrder, icecreamRestocked },
