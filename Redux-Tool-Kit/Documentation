@@ -1,0 +1,9 @@
+To install tool kit use:
+--> npm i @reduxjs/toolkit
+
+==> create a main file name index.js
+
+Structure should be followed as suggested by the redux-toolkit
+
+1. create a app folder and add a app.js file
+2. create a folder features and add two more folder in it named cake & icecream
