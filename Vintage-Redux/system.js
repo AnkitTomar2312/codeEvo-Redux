@@ -1,8 +1,11 @@
 const redux = require("redux");
 const createStore = redux.createStore;
-
+const bindActionCreators = redux.bindActionCreators;
+const combineReducers = redux.combineReducers;
 const CAKE_ORDER = "CAKE_ORDER";
 const CAKE_REORDER = "CAKE_REORDER";
+const ICECREAM_ORDER = "ICECREAM_ORDER";
+const ICECREAM_REORDER = "ICECREAM_REORDER";
 
 function orderCake(payload) {
   return {
@@ -17,12 +20,27 @@ function cakeReoreder(payload) {
     quantity: payload,
   };
 }
+function orderIcecream(payload) {
+  return {
+    type: ICECREAM_ORDER,
+    quantity: payload,
+  };
+}
 
-const intitalState = {
+function icecreamReoreder(payload) {
+  return {
+    type: ICECREAM_ORDER,
+    quantity: payload,
+  };
+}
+const cakeintitalState = {
   numberOfcake: 10,
 };
+const icecreamintitalState = {
+  numberOficecream: 20,
+};
 
-const reducer = (state = intitalState, action) => {
+const cakereducer = (state = cakeintitalState, action) => {
   switch (action.type) {
     case "CAKE_ORDER":
       return {
@@ -38,8 +56,28 @@ const reducer = (state = intitalState, action) => {
       return state;
   }
 };
+const icecreamreducer = (state = icecreamintitalState, action) => {
+  switch (action.type) {
+    case "ICECREAM_ORDER":
+      return {
+        ...state,
+        numberOficecream: state.numberOficecream - action.quantity,
+      };
+    case "ICECREAM_REORDER":
+      return {
+        ...state,
+        numberOficecream: state.numberOficecream + action.quantity,
+      };
+    default:
+      return state;
+  }
+};
 
-const store = createStore(reducer);
+const rootReducers = combineReducers({
+  cake: cakereducer,
+  icecream: icecreamreducer,
+});
+const store = createStore(rootReducers);
 
 console.log("Initial State", store.getState());
 
@@ -47,7 +85,13 @@ const unsubscribe = store.subscribe(() => {
   console.log("Updated State", store.getState());
 });
 
-store.dispatch(orderCake(4));
-store.dispatch(cakeReoreder(3));
+const action = bindActionCreators(
+  { orderCake, cakeReoreder, icecreamReoreder, orderIcecream },
+  store.dispatch
+);
 
+action.orderCake(2);
+action.cakeReoreder(2);
+action.orderIcecream(5);
+action.icecreamReoreder(5);
 unsubscribe();
